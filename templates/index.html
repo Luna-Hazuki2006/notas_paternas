@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>{% block title %}Aplicación de notas{% endblock %}</title>
 </head>
 <body>
-    
+    {% for mensaje in get_flashed_messages() %}
+    <p style="color: red;">{{ mensaje }}</p>
+    {% endfor %}
+    <section class="contenido">
+        {% block content %}
+        {% endblock %}
+    </section>
 </body>
 </html>
