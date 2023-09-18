@@ -6,3 +6,4 @@ db = cliente.notas_paternas
 
 categorias = db.categorias
 notas = db.notas
+examenes = db.examenes

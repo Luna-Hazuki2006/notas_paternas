@@ -8,7 +8,11 @@
 </head>
 <body>
     <header>
-        
+        <nav>
+            <ul>
+                <a href="{{ url_for('listar_categorias') }}">Categorias</a>
+            </ul>
+        </nav>
     </header>
     {% for mensaje in get_flashed_messages() %}
     <p style="color: red;">{{ mensaje }}</p>
