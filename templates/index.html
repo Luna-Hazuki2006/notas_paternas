@@ -7,6 +7,9 @@
     <title>{% block title %}Aplicación de notas{% endblock %}</title>
 </head>
 <body>
+    <header>
+        
+    </header>
     {% for mensaje in get_flashed_messages() %}
     <p style="color: red;">{{ mensaje }}</p>
     {% endfor %}
