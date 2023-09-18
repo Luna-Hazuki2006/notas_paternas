@@ -6,7 +6,7 @@ app.config['SECRET_KEY'] = 'pBsMG9T=Vjz*yDb}64$twh'
 
 @app.route('/')
 def iniciar():
-    return render_template('/inicio/index.html')
+    return render_template('/inicio/index.html', texto='esto es una prueba de texto')
 
 @app.route('/pregunta')
 def listar_preguntas():
