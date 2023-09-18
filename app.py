@@ -16,5 +16,9 @@ def hacer_pregunta():
 def hacer_pregunta():
     return render_template('/pregunta/index.html')
 
+@app.route('/examenes')
+def hacer_examenes(): 
+    return render_template('/examenes/index.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
