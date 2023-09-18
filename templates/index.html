@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='index.js') }}" defer></script>
     <title>{% block title %}Aplicación de notas{% endblock %}</title>
 </head>
 <body>
     <header>
+        <h1>Administrador de notas y exámenes</h1>
         <nav>
             <ul>
                 <li>
