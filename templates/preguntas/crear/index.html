@@ -1,6 +1,48 @@
 {% extends '././index.html' %}
 {% block content %}
 
-<h1>Cosas importantes</h1>
+<h2>{% block title %}Añadir pregunta{% endblock %}</h2>
+<form method="post">
+    <fieldset>
+        <legend>Datos</legend>
+        <label for="nombre">Pregunta: </label>
+        <input 
+            type="text" 
+            name="nombre" 
+            id="nombre" 
+            value="{{ request.form['nombre'] }}"
+            required
+        ><br>
+        <label for="categoria">Categoría: </label>
+        <select name="categoria" id="categoria" required>
+            {% for categoria in divisiones %}
+            <option value="{{ categoria['id'] }}">{{ categoria['nombre'] }}</option>
+            {% endfor %}
+        </select><br>
+        <label for="puntaje">Puntaje: </label>
+        <input 
+            type="number" 
+            min="0.5"
+            name="puntaje" 
+            id="puntaje" 
+            value="0.5"
+            value="{{ request.form['puntaje'] }}"
+            required
+        ><br>
+        <label for="imagen">Imagen (opcional): </label>
+        <input 
+            type="file" 
+            name="imagen" 
+            id="imagen"
+            accept="image/png, image/jpeg"
+        >
+        <div>
+            <a href="{{ url_for('listar_examenes') }}">
+                <button type="button">Cancelar</button>
+            </a>
+            <button type="submit">Crear</button>
+        </div>
+    </fieldset>
+</form>
 
 {% endblock %}

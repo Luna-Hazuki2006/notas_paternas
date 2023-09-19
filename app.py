@@ -2,10 +2,13 @@ from flask import (Flask, render_template,
                    request, redirect, 
                    url_for, flash)
 import io
+from bson.binary import Binary
+
 from db import categorias, preguntas, examenes
 from validaciones import (validar_crear_categoria, 
                           validar_editar_categoria, 
-                          validar_eliminar_categoria)
+                          validar_eliminar_categoria, 
+                          validar_crear_pregunta)
 
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'pBsMG9T=Vjz*yDb}64$twh'
@@ -37,7 +40,32 @@ def listar_preguntas():
 
 @app.route('/pregunta', methods=['GET', 'POST'])
 def crear_pregunta():
-    return render_template('/preguntas/crear/index.html')
+    divisiones = categorias.find({'estatus': 'A'})
+    if request.method == 'POST':
+        forma = request.form
+        numero = preguntas.count_documents({}) + 1
+        nueva_pregunta = {
+            'id': 'E' + str(numero), 
+            'nombre': str(forma['nombre']), 
+            'categoria': forma['categoria'], 
+            'puntaje': forma['puntaje'], 
+            'tipo': forma['tipo'], 
+            'imagen': forma['imagen'], 
+            'estatus': 'A'
+        }
+        if forma['tipo'] == 'seleccion': 
+            nueva_pregunta['respuestas'] = forma['respuestas']
+        if validar_crear_pregunta(nueva_pregunta):
+            nueva_pregunta['precio'] = int(forma['precio'])
+            id = preguntas.insert_one(nueva_pregunta).inserted_id
+            if id:
+                flash('Pregunta creada con éxito')
+                return redirect(url_for('listar_preguntas'))
+            else: 
+                flash('Ocurrió un error guardando')
+        else: flash('La pregunta no pasó las validaciones')
+    return render_template('/preguntas/crear/index.html', 
+                           divisiones=divisiones)
 
 @app.route('/pregunta/<id>', methods=['GET'])
 def consultar_pregunta(id):

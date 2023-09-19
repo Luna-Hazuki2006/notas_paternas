@@ -28,3 +28,7 @@ def validar_eliminar_categoria(categoria):
             verdad = False
             break
     return verdad
+
+def validar_crear_pregunta(pregunta): 
+    verdad = True
+    return verdad
