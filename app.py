@@ -1,9 +1,9 @@
 from flask import (Flask, render_template, 
                    request, redirect, 
                    url_for, flash)
-import io
-from bson.binary import Binary
-
+# import io
+# from bson.binary import Binary
+# from PIL import Image
 from db import categorias, preguntas, examenes
 from validaciones import (validar_crear_categoria, 
                           validar_editar_categoria, 
@@ -48,15 +48,11 @@ def crear_pregunta():
             'id': 'E' + str(numero), 
             'nombre': str(forma['nombre']), 
             'categoria': forma['categoria'], 
-            'puntaje': forma['puntaje'], 
-            'tipo': forma['tipo'], 
-            'imagen': forma['imagen'], 
+            'puntaje': float(forma['puntaje']), 
+            'imagen': forma['vistas'], 
             'estatus': 'A'
         }
-        if forma['tipo'] == 'seleccion': 
-            nueva_pregunta['respuestas'] = forma['respuestas']
         if validar_crear_pregunta(nueva_pregunta):
-            nueva_pregunta['precio'] = int(forma['precio'])
             id = preguntas.insert_one(nueva_pregunta).inserted_id
             if id:
                 flash('Pregunta creada con éxito')

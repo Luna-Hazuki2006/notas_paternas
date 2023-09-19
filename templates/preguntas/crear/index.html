@@ -6,13 +6,13 @@
     <fieldset>
         <legend>Datos</legend>
         <label for="nombre">Pregunta: </label>
-        <input 
-            type="text" 
+        <textarea 
             name="nombre" 
             id="nombre" 
-            value="{{ request.form['nombre'] }}"
+            cols="30" 
+            rows="10" 
             required
-        ><br>
+        >{{ request.form['nombre'] }}</textarea><br>
         <label for="categoria">Categoría: </label>
         <select name="categoria" id="categoria" required>
             {% for categoria in divisiones %}
@@ -35,9 +35,11 @@
             name="imagen" 
             id="imagen"
             accept="image/png, image/jpeg"
-        >
+            oninput="mostrar_imagen()"
+        ><br>
+        <input type="hidden" name="vistas" id="vistas">
         <div>
-            <a href="{{ url_for('listar_examenes') }}">
+            <a href="{{ url_for('listar_preguntas') }}">
                 <button type="button">Cancelar</button>
             </a>
             <button type="submit">Crear</button>

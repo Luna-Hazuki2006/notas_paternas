@@ -2,6 +2,7 @@
 {% block content %}
 
 <h2>{% block title %}Lista de preguntas{% endblock %}</h2>
+{% if revisado %}
 <a href="{{ url_for('crear_pregunta') }}">¿No encuentras una pregunta? ¡Créala!</a> 
 <section>
     <form method="post">
@@ -26,14 +27,15 @@
             <th>Código</th>
             <th>Nombre</th>
             <th>puntaje</th>
-            <th>tipo</th>
+            <th>Categoría</th>
+            <th>Opciones</th>
         </tr>
         {% for pregunta in lista %}
         <tr>
             <td>{{ pregunta['id'] }}</td>
             <td>{{ pregunta['nombre'] }}</td>
             <td>{{ pregunta['puntaje'] }}</td>
-            <td>{{ pregunta['tipo'] }}</td>
+            <td>{{ pregunta['categoria'] }}</td>
             <td>
                 <a href="{{ url_for('consultar_pregunta', id=servicio['id']) }}">
                     <img class="pequeño" src="{{ url_for('static', filename='consultar.png') }}" alt="Consultar">
@@ -49,5 +51,11 @@
         {% endfor %}
     </table>
 </section>
+{% else %}
+<h1 class="rojo">
+    Disculpe, pero debe de haber mínimo una 
+    categoría para acceder esta área
+</h1>
+{% endif %}
 
 {% endblock %}

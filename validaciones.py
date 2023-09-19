@@ -31,4 +31,9 @@ def validar_eliminar_categoria(categoria):
 
 def validar_crear_pregunta(pregunta): 
     verdad = True
+    lista = preguntas.find({'estatus': 'A'})
+    for esto in lista: 
+        if pregunta['nombre'] == esto['nombre']: 
+            verdad = False
+            break
     return verdad
