@@ -1,6 +1,24 @@
 {% extends '././index.html' %}
 {% block content %}
 
-<h1>Cosas importantes</h1>
+<h2>{% block title %}Consulta de categoría{% endblock %}</h2>
+
+<div>
+    <p class="izquierda">
+        <strong>Id: </strong> {{ categoria['id'] }} <br>
+        <strong>Nombre: </strong> {{ categoria['nombre'] }} <br>
+        <strong>Descripción: </strong> 
+        {% if categoria['descripcion'] != '' %}
+        {{ categoria['descripcion'] }}
+        {% else %}
+        No posée una.
+        {% endif %}
+    </p>
+</div>
+<div>
+    <a href="{{ url_for('listar_categorias') }}">
+        <button type="button">Volver a la lista</button>
+    </a>
+</div>
 
 {% endblock %}

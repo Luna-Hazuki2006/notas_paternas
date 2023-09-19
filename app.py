@@ -57,8 +57,7 @@ def crear_categoria():
             'descripcion': forma['descripcion'], 
             'estatus': 'A'
         }
-        if nueva_categoria:
-            categorias.up
+        if validar_crear_categoria(nueva_categoria):
             id = categorias.insert_one(nueva_categoria).inserted_id
             if id:
                 flash('Categoría creada con éxito')
@@ -70,15 +69,18 @@ def crear_categoria():
 
 @app.route('/categoria/<id>', methods=['GET'])
 def consultar_categoria(id):
-    return render_template('/categorias/crear/index.html')
+    categoria = categorias.find_one({'id': id, 'estatus': 'A'})
+    return render_template('/categorias/consultar/index.html', 
+                           categoria=categoria)
 
-@app.route('/categoria/<id>', methods=['GET', 'POST'])
+@app.route('/categoria/<id>/modificar', methods=['GET', 'PUT'])
 def modificar_categoria(id):
+    
     return render_template('/categorias/modificar/index.html')
 
-@app.route('/categoria/<id>', methods=['GET', 'POST'])
+@app.route('/categoria/<id>/eliminar', methods=['GET', 'DELETE'])
 def eliminar_categoria(id):
-    return render_template('/categorias/modificar/index.html')
+    return render_template('/categorias/eliminar/index.html')
 
 @app.route('/examenes')
 def listar_examenes(): 

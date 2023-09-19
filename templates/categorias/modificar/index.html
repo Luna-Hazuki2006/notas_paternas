@@ -1,6 +1,29 @@
 {% extends '././index.html' %}
 {% block content %}
 
-<h1>Cosas importantes</h1>
+<h2>{% block title %}Actualizar categoría{% endblock %}</h2>
+<form method="post">
+    <fieldset>
+        <legend>Datos</legend>
+        <label for="nombre">Nombre: </label>
+        <input 
+            type="text" 
+            name="nombre" 
+            id="nombre" 
+            value="{{ vieja_categoria['nombre'] }}"
+        ><br><br>
+        <label for="descripcion">Descripción: </label>
+        <textarea 
+            name="descripcion" 
+            id="descripcion" 
+            cols="30" 
+            rows="10"
+            >{{ vieja_categoria['descripcion'] }}</textarea>
+        <a href="{{ url_for('listar_categorias') }}">
+            <button type="button">Cancelar</button>
+        </a>
+        <button type="submit">Modificar</button>        
+    </fieldset>
+</form>
 
 {% endblock %}
