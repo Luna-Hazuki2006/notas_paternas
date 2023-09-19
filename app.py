@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, flash
 from db import categorias, notas, examenes
 
 app = Flask(__name__, template_folder='templates')
@@ -6,7 +6,7 @@ app.config['SECRET_KEY'] = 'pBsMG9T=Vjz*yDb}64$twh'
 
 @app.route('/')
 def iniciar():
-    return render_template('/inicio/index.html', texto='esto es una prueba de texto')
+    return render_template('/inicio/index.html')
 
 @app.route('/preguntas', methods=['GET'])
 def listar_preguntas():
@@ -30,10 +30,30 @@ def eliminar_pregunta():
 
 @app.route('/categorias', methods=['GET'])
 def listar_categorias():
+    lista = categorias.find({'estatus': 'A'})
+    
     return render_template('/pregunta/index.html')
 
 @app.route('/cetegoria', methods=['GET', 'POST'])
 def crear_categoria():
+    if request.method == 'POST':
+        numero = categorias.count_documents({}) + 1
+        forma = request.form
+        nueva_categoria = {
+            'id': 'C' + str(numero), 
+            'nombre': forma['nombre'], 
+            'descripcion': forma['descripcion'], 
+            'estatus': 'A'
+        }
+        if validar_crear_categoria(nueva_categoria):
+            categorias.up
+            id = categorias.insert_one(nueva_categoria).inserted_id
+            if id:
+                flash('Categoría creada con éxito')
+                return redirect(url_for('listar_categorias'))
+            else: 
+                flash('Ocurrió un error guardando')
+        else: flash('Se ingresó un nombre repetido')
     return render_template('/categorias/crear/index.html')
 
 @app.route('/categoria/<id>', methods=['GET'])
