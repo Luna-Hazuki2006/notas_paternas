@@ -1,3 +1,7 @@
 function mostrar_mensaje(texto) {
-    alert(texto)
+    Swal.fire({
+        icon: 'info', 
+        title: 'Un muy bonito título', 
+        text: texto
+    })
 }

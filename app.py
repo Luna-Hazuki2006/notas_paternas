@@ -6,7 +6,8 @@ app.config['SECRET_KEY'] = 'pBsMG9T=Vjz*yDb}64$twh'
 
 @app.route('/')
 def iniciar():
-    return render_template('/inicio/index.html')
+    texto = 'Una pequeña prueba'
+    return render_template('/inicio/index.html', texto=texto)
 
 @app.route('/preguntas', methods=['GET'])
 def listar_preguntas():
@@ -31,7 +32,6 @@ def eliminar_pregunta():
 @app.route('/categorias', methods=['GET'])
 def listar_categorias():
     lista = categorias.find({'estatus': 'A'})
-    
     return render_template('/pregunta/index.html')
 
 @app.route('/cetegoria', methods=['GET', 'POST'])
