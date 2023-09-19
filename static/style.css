@@ -45,6 +45,12 @@ form {
     width: 70%;
 }
 
+fieldset {
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 5px;
+}
+
 .pequeño {
     width: 25px;
 }
