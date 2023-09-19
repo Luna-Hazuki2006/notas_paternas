@@ -2,7 +2,7 @@ body {
     background-color: lavender;
 }
 
-h1, h2 {
+h1, h2, legend {
     text-align: center;
 }
 
@@ -57,4 +57,10 @@ form {
 
 .izquierda {
     text-align: left;
+}
+
+.redondeado {
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 5px;
 }

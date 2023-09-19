@@ -15,23 +15,39 @@ def iniciar():
     texto = 'Una pequeña prueba'
     return render_template('/inicio/index.html', texto=texto)
 
-@app.route('/preguntas', methods=['GET'])
+@app.route('/preguntas', methods=['GET', 'POST'])
 def listar_preguntas():
-    return render_template('/preguntas/listar/index.html')
+    previos = categorias.count_documents({'estatus': 'A'})
+    revisado = True
+    if previos == 0: 
+        revisado = False
+        return render_template('/preguntas/listar/index.html', 
+                               revisado=revisado)
+    divisiones = categorias.find({'estatus': 'A'})
+    lista = preguntas.find({'estatus': 'A'})
+    if request.method == 'POST': 
+        forma = request.form
+        tipo = forma['categoria']
+        lista = preguntas.find({'categoria': tipo, 'estatus': 'A'})
+
+    return render_template('/preguntas/listar/index.html', 
+                           revisado=revisado, 
+                           lista=lista, 
+                           divisiones=divisiones)
 
 @app.route('/pregunta', methods=['GET', 'POST'])
-def crear_preguntas():
+def crear_pregunta():
     return render_template('/preguntas/crear/index.html')
 
 @app.route('/pregunta/<id>', methods=['GET'])
 def consultar_pregunta(id):
     return render_template('/preguntas/crear/index.html')
 
-@app.route('/pregunta/<id>', methods=['GET', 'POST'])
+@app.route('/pregunta/<id>/modificar', methods=['GET', 'POST'])
 def modificar_pregunta(id):
     return render_template('/preguntas/modificar/index.html')
 
-@app.route('/pregunta/<id>', methods=['GET', 'POST'])
+@app.route('/pregunta/<id>/eliminar', methods=['GET', 'POST'])
 def eliminar_pregunta(id):
     return render_template('/preguntas/modificar/index.html')
 

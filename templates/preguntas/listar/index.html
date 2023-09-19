@@ -1,6 +1,53 @@
 {% extends '././index.html' %}
 {% block content %}
 
-<h1>Cosas importantes</h1>
+<h2>{% block title %}Lista de preguntas{% endblock %}</h2>
+<a href="{{ url_for('crear_pregunta') }}">¿No encuentras una pregunta? ¡Créala!</a> 
+<section>
+    <form method="post">
+        <fieldset class="redondeado">
+            <legend>Filtrar preguntas</legend>
+            <label for="categoria">Categorías: </label>
+            <select name="categoria" id="categoria">
+                <option value="{{ categoria }}">Todas las categorías</option>
+                {% for categoria in divisiones %}
+                <option value="{{ categoria['id'] }}">{{ categoria['nombre'] }}</option>
+                {% endfor %}
+            </select>
+            <div>
+                <button type="submit">Filtrar</button>
+            </div>
+        </fieldset>
+    </form>
+</section>
+<section class="contenido">
+    <table>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>puntaje</th>
+            <th>tipo</th>
+        </tr>
+        {% for pregunta in lista %}
+        <tr>
+            <td>{{ pregunta['id'] }}</td>
+            <td>{{ pregunta['nombre'] }}</td>
+            <td>{{ pregunta['puntaje'] }}</td>
+            <td>{{ pregunta['tipo'] }}</td>
+            <td>
+                <a href="{{ url_for('consultar_pregunta', id=servicio['id']) }}">
+                    <img class="pequeño" src="{{ url_for('static', filename='consultar.png') }}" alt="Consultar">
+                </a>
+                <a href="{{ url_for('modificar_pregunta', id=servicio['id']) }}">
+                    <img class="pequeño" src="{{ url_for('static', filename='actualizar.png') }}" alt="Actualizar">
+                </a>
+                <a href="{{ url_for('eliminar_pregunta', id=servicio['id']) }}">
+                    <img class="pequeño" src="{{ url_for('static', filename='eliminar.png') }}" alt="Eliminar">
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
 
 {% endblock %}
