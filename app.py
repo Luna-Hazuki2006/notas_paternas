@@ -19,21 +19,31 @@ def crear_preguntas():
     return render_template('/preguntas/crear/index.html')
 
 @app.route('/pregunta/<id>', methods=['GET'])
-def consultar_pregunta():
+def consultar_pregunta(id):
     return render_template('/preguntas/crear/index.html')
 
 @app.route('/pregunta/<id>', methods=['GET', 'POST'])
-def modificar_pregunta():
+def modificar_pregunta(id):
     return render_template('/preguntas/modificar/index.html')
 
 @app.route('/pregunta/<id>', methods=['GET', 'POST'])
-def eliminar_pregunta():
+def eliminar_pregunta(id):
     return render_template('/preguntas/modificar/index.html')
 
 @app.route('/categorias', methods=['GET'])
 def listar_categorias():
     lista = categorias.find({'estatus': 'A'})
-    return render_template('/categorias/listar/index.html', lista=lista)
+    prueba = []
+    for esto in categorias.find({'estatus': 'A'}):
+        nueva = {
+            'id': esto['id'], 
+            'nombre': esto['nombre'], 
+            'descripcion': esto['descripcion']
+        }
+        prueba.append(nueva)
+    return render_template('/categorias/listar/index.html', 
+                           lista=lista, 
+                           prueba=prueba)
 
 @app.route('/categoria', methods=['GET', 'POST'])
 def crear_categoria():
@@ -46,7 +56,7 @@ def crear_categoria():
             'descripcion': forma['descripcion'], 
             'estatus': 'A'
         }
-        if validar_crear_categoria(nueva_categoria):
+        if nueva_categoria:
             categorias.up
             id = categorias.insert_one(nueva_categoria).inserted_id
             if id:
@@ -58,15 +68,15 @@ def crear_categoria():
     return render_template('/categorias/crear/index.html')
 
 @app.route('/categoria/<id>', methods=['GET'])
-def consultar_categoria():
+def consultar_categoria(id):
     return render_template('/categorias/crear/index.html')
 
-@app.route('/pregunta/<id>', methods=['GET', 'POST'])
-def modificar_categorias():
+@app.route('/categoria/<id>', methods=['GET', 'POST'])
+def modificar_categoria(id):
     return render_template('/categorias/modificar/index.html')
 
-@app.route('/pregunta/<id>', methods=['GET', 'POST'])
-def eliminar_categorias():
+@app.route('/categoria/<id>', methods=['GET', 'POST'])
+def eliminar_categoria(id):
     return render_template('/categorias/modificar/index.html')
 
 @app.route('/examenes')
@@ -78,15 +88,15 @@ def crear_examen():
     return render_template('/examenes/crear/index.html')
 
 @app.route('/examen/<id>', methods=['GET'])
-def consultar_examen():
+def consultar_examen(id):
     return render_template('/examenes/crear/index.html')
 
 @app.route('/examen/<id>', methods=['GET', 'POST'])
-def modificar_examen():
+def modificar_examen(id):
     return render_template('/examenes/modificar/index.html')
 
 @app.route('/examen/<id>', methods=['GET', 'POST'])
-def eliminar_examene():
+def eliminar_examene(id):
     return render_template('/examenes/modificar/index.html')
 
 if __name__ == '__main__':

@@ -1,6 +1,33 @@
 {% extends '././index.html' %}
 {% block content %}
 
-<h1>Cosas importantes</h1>
+<h2>{% block title %}Crear categoría{% endblock %}</h2>
+<form method="post">
+    <fieldset>
+        <legend>Datos</legend>
+        <label for="nombre">Nombre: </label>
+        <input 
+            type="text" 
+            name="nombre" 
+            id="nombre" 
+            value="{{ request.form['nombre'] }}" 
+            required
+        ><br>
+        <label for="descripcion">Descripción: </label>
+        <textarea 
+            name="descripcion" 
+            id="descripcion" 
+            cols="30" 
+            rows="10"
+            placeholder="Opcional, pero recomendado"
+            >{{ request.form['descripcion'] }}</textarea>
+        <div>
+            <a href="{{ url_for('listar_categorias') }}">
+                <button type="button">Cancelar</button>
+            </a>
+            <button type="submit">Crear</button>
+        </div>        
+    </fieldset>
+</form>
 
 {% endblock %}

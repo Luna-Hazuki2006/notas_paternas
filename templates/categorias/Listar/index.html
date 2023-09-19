@@ -10,7 +10,7 @@
         <th>Opciones</th>
     </tr>
     {% for categoria in lista %}
-    <tr onload="mostrar_escrito('{{ categoria }}')">
+    <tr>
         <td>{{ categoria['id'] }}</td>
         <td>{{ categoria['nombre'] }}</td>
         <td>
@@ -27,5 +27,9 @@
     </tr>
     {% endfor %}
 </table>
+<button onclick="mostrar_escrito(dato);" type="button">Ver</button>
+<script>
+    let dato = '{{ prueba|tojson }}';
+</script>
 
 {% endblock %}
