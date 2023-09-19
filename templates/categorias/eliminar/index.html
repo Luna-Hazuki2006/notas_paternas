@@ -1,6 +1,28 @@
 {% extends '././index.html' %}
 {% block content %}
 
-<h1>Cosas importantes</h1>
+<h2>{% block title %}Consulta de categoría{% endblock %}</h2>
+
+<div>
+    <h3>Datos:</h3>
+    <p class="izquierda">
+        <strong>Id: </strong> {{ vieja_categoria['id'] }} <br>
+        <strong>Nombre: </strong> {{ vieja_categoria['nombre'] }} <br>
+        <strong>Descripción: </strong> 
+        {% if vieja_categoria['descripcion'] != '' %}
+        {{ vieja_categoria['descripcion'] }}
+        {% else %}
+        No posée una.
+        {% endif %}
+    </p>
+</div>
+<div>
+    <form method="post">
+        <a href="{{ url_for('listar_categorias') }}">
+            <button type="button">Volver a la lista</button>
+        </a>
+        <button type="submit">Eliminar</button>
+    </form>
+</div>
 
 {% endblock %}

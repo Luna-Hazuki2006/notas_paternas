@@ -1,7 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import (Flask, render_template, 
+                   request, redirect, 
+                   url_for, flash)
 import io
-from db import categorias, notas, examenes
-from validaciones import validar_crear_categoria
+from db import categorias, preguntas, examenes
+from validaciones import (validar_crear_categoria, 
+                          validar_editar_categoria, 
+                          validar_eliminar_categoria)
 
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'pBsMG9T=Vjz*yDb}64$twh'
@@ -73,14 +77,47 @@ def consultar_categoria(id):
     return render_template('/categorias/consultar/index.html', 
                            categoria=categoria)
 
-@app.route('/categoria/<id>/modificar', methods=['GET', 'PUT'])
+@app.route('/categoria/<id>/modificar', methods=['GET', 'POST'])
 def modificar_categoria(id):
-    
-    return render_template('/categorias/modificar/index.html')
+    vieja = categorias.find_one({'id': id, 'estatus': 'A'})
 
-@app.route('/categoria/<id>/eliminar', methods=['GET', 'DELETE'])
+    if not vieja:
+        flash('Categoría no encontrada')
+        return redirect(url_for('listar_categorias'))
+    
+    if request.method == 'POST':
+        forma = request.form
+        nueva_categoria = {
+            'nombre': forma['nombre'], 
+            'descripcion': forma['descripcion'], 
+        }
+        if validar_editar_categoria(nueva_categoria):
+            busqueda = {'id': id, 'estatus': 'A'}
+            final = {'$set': nueva_categoria}
+            categorias.update_one(busqueda, final)
+            return redirect(url_for('listar_categorias'))
+        else: flash('Se ingresó un nombre repetido')
+    return render_template('/categorias/modificar/index.html', 
+                           vieja_categoria=vieja)
+
+@app.route('/categoria/<id>/eliminar', methods=['GET', 'POST'])
 def eliminar_categoria(id):
-    return render_template('/categorias/eliminar/index.html')
+    vieja = categorias.find_one({'id': id, 'estatus': 'A'})
+
+    if not vieja:
+        flash('Categoría no encontrada')
+        return redirect(url_for('listar_categorias'))
+    
+    if request.method == 'POST':
+        if validar_eliminar_categoria(vieja):
+            busqueda = {'id': id, 'estatus': 'A'}
+            final = {'$set': {'estatus': 'I'}}
+            categorias.update_one(busqueda, final)
+            flash('Categoría eliminada con éxito')
+            return redirect(url_for('listar_categorias'))
+        else: flash('No se puede eliminar categorías que están en uso')
+    return render_template('/categorias/eliminar/index.html', 
+                           vieja_categoria=vieja)
 
 @app.route('/examenes')
 def listar_examenes(): 

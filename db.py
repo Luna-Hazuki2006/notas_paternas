@@ -5,5 +5,5 @@ cliente = pymongo.MongoClient('mongodb+srv://lunahazuki2006:cXU0lYhSncWZ12FM@clu
 db = cliente.notas_paternas
 
 categorias = db.categorias
-notas = db.notas
+preguntas = db.preguntas
 examenes = db.examenes
