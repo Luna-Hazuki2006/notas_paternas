@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+import io
 from db import categorias, notas, examenes
 
 app = Flask(__name__, template_folder='templates')
@@ -32,9 +33,9 @@ def eliminar_pregunta():
 @app.route('/categorias', methods=['GET'])
 def listar_categorias():
     lista = categorias.find({'estatus': 'A'})
-    return render_template('/pregunta/index.html')
+    return render_template('/categorias/listar/index.html', lista=lista)
 
-@app.route('/cetegoria', methods=['GET', 'POST'])
+@app.route('/categoria', methods=['GET', 'POST'])
 def crear_categoria():
     if request.method == 'POST':
         numero = categorias.count_documents({}) + 1
