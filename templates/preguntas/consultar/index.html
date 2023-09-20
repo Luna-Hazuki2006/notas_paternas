@@ -1,6 +1,24 @@
 {% extends '././index.html' %}
 {% block content %}
 
-<h1>Cosas importantes</h1>
+<h2>{% block title %}Consulta de pregunta{% endblock %}</h2>
+<div>
+    <h3>Datos:</h3>
+    <p class="izquierda">
+        <strong>Id: </strong> {{ pregunta['id'] }} <br>
+        <strong>Categoría: </strong> {{ pregunta['categoria'] }} <br>
+        <strong>Puntaje: </strong> {{ pregunta['puntaje'] }} puntos <br>
+        <strong>Nombre: </strong> {{ pregunta['nombre'] }} <br>
+        {% if pregunta['imagen'] != '' %}
+        <strong>Imagen: </strong> <br>
+        <img src="{{ pregunta['imagen'] }}" alt="Imagen para pregunta"><br>
+        {% endif %}
+    </p>
+</div>
+<div>
+    <a href="{{ url_for('listar_preguntas') }}">
+        <button type="button">Volver a la lista</button>
+    </a>
+</div>
 
 {% endblock %}

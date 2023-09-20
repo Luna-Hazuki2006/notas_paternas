@@ -1,14 +1,12 @@
 from flask import (Flask, render_template, 
                    request, redirect, 
                    url_for, flash)
-# import io
-# from bson.binary import Binary
-# from PIL import Image
 from db import categorias, preguntas, examenes
 from validaciones import (validar_crear_categoria, 
                           validar_editar_categoria, 
                           validar_eliminar_categoria, 
-                          validar_crear_pregunta)
+                          validar_crear_pregunta, 
+                          validar_editar_pregunta)
 
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'pBsMG9T=Vjz*yDb}64$twh'
@@ -31,8 +29,9 @@ def listar_preguntas():
     if request.method == 'POST': 
         forma = request.form
         tipo = forma['categoria']
-        lista = preguntas.find({'categoria': tipo, 'estatus': 'A'})
-
+        print(tipo)
+        if tipo != '':
+            lista = preguntas.find({'categoria': tipo, 'estatus': 'A'})
     return render_template('/preguntas/listar/index.html', 
                            revisado=revisado, 
                            lista=lista, 
@@ -64,16 +63,63 @@ def crear_pregunta():
                            divisiones=divisiones)
 
 @app.route('/pregunta/<id>', methods=['GET'])
-def consultar_pregunta(id):
-    return render_template('/preguntas/crear/index.html')
+def consultar_pregunta(id): 
+    pregunta = preguntas.find_one({'id': id, 'estatus': 'A'})
+    dato = pregunta['categoria']
+    categoria = categorias.find_one({'id': dato, 'estatus': 'A'})
+    pregunta['categoria'] = categoria['nombre']
+    return render_template('/preguntas/consultar/index.html', 
+                           pregunta=pregunta)
 
 @app.route('/pregunta/<id>/modificar', methods=['GET', 'POST'])
 def modificar_pregunta(id):
-    return render_template('/preguntas/modificar/index.html')
+    vieja = preguntas.find_one({'id': id, 'estatus': 'A'})
+    divisiones = categorias.find({'estatus': 'A'})
+    if not vieja:
+        flash('Pregunta no encontrada')
+        return redirect(url_for('listar_preguntas'))
+    if request.method == 'POST':
+        forma = request.form
+        nueva_pregunta = {
+            'id': vieja['id'], 
+            'nombre': str(forma['nombre']), 
+            'categoria': str(forma['categoria']), 
+            'puntaje': float(forma['puntaje']), 
+            'imagen': forma['vistas']
+        }
+        if validar_editar_pregunta(nueva_pregunta):
+            busqueda = {'id': id, 'estatus': 'A'}
+            final = {'$set': nueva_pregunta}
+            examenes.update_one(busqueda, final)
+            return redirect(url_for('listar_preguntas'))
+        else: flash('No pasó las validaciones')
+    return render_template('/preguntas/modificar/index.html', 
+                           divisiones=divisiones, 
+                           vieja_pregunta=vieja)
 
 @app.route('/pregunta/<id>/eliminar', methods=['GET', 'POST'])
 def eliminar_pregunta(id):
-    return render_template('/preguntas/modificar/index.html')
+    viejo_examen = examenes.find_one({'id': id, 'estatus': 'A'})
+
+    if not viejo_examen:
+        flash('Examen no encontrado')
+        return redirect(url_for('listar_examenes'))
+    
+    examen_eliminado = {
+        'id': viejo_examen['id'], 
+        'nombre': viejo_examen['nombre'], 
+        'categoria': viejo_examen['categoria'], 
+        'tipo': viejo_examen['tipo'], 
+        'precio': viejo_examen['precio'], 
+        'indicaciones': viejo_examen['indicaciones'], 
+        'estatus': 'I'
+    }
+    
+    if request.method == 'POST':
+        examenes.update_one({'id': id, 'estatus': 'A'}, examen_eliminado)
+        flash('Examen eliminado con éxito')
+        return redirect(url_for('listar_examenes'))
+    return render_template('/preguntas/eliminar/index.html')
 
 @app.route('/categorias', methods=['GET'])
 def listar_categorias():

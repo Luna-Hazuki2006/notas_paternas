@@ -19,7 +19,18 @@ function mostrar_imagen() {
     fReader.onloadend = function(event) {
         var img = document.getElementById("vistas");
         img.value = event.target.result;
+        img = document.getElementById('externa')
+        img.src = event.target.result
         console.log(event.target.result);
         return event.target.result
     }
+}
+
+function deimaginar() {
+    let imagen = document.getElementById('imagen')
+    let externa = document.getElementById('externa')
+    let vistas = document.getElementById('vistas')
+    imagen.value = ''
+    externa.src = ''
+    vistas.value = ''
 }

@@ -1,6 +1,66 @@
 {% extends '././index.html' %}
 {% block content %}
 
-<h1>Cosas importantes</h1>
+<h2>{% block title %}Actualizar pregunta{% endblock %}</h2>
+<form method="post">
+    <fieldset>
+        <legend>Datos</legend>
+        <div>
+            <label for="nombre">Nombre: </label>
+            <textarea 
+                name="nombre" 
+                id="nombre" 
+                cols="30" 
+                rows="10" 
+                required
+            >{{ vieja_pregunta['nombre'] }}</textarea><br>
+            <label for="categoria">Categoría: </label>
+            <select name="categoria" id="categoria">
+                {% for categoria in divisiones %}
+                {% if vieja_pregunta['categoria'] == categoria %}
+                <option value="{{ categoria['id'] }}" selected>{{ categoria['nombre'] }}</option>
+                {% else %}
+                <option value="{{ categoria['id'] }}">{{ categoria['nombre'] }}</option>
+                {% endif %}
+                {% endfor %}
+            </select><br><br>
+            <label for="puntaje">Puntaje: </label>
+            <input 
+                type="number" 
+                min="0.5"
+                step="0.5"
+                name="puntaje" 
+                id="puntaje" 
+                placeholder="0.5"
+                value="{{ vieja_pregunta['puntaje'] }}"
+                required
+            ><br>
+            <label for="imagen">Imagen (opcional): </label>
+            <input 
+                type="file" 
+                name="imagen" 
+                id="imagen"
+                accept="image/png, image/jpeg"
+                oninput="mostrar_imagen()"
+            >
+            <button onclick="deimaginar()" type="button">Quitar imagen</button><br>
+            <img 
+                id="externa" 
+                src="{{ vieja_pregunta['imagen'] }}" 
+                alt="Si ves esto, no tienes una imagen">
+            <input 
+                type="hidden" 
+                name="vistas" 
+                id="vistas" 
+                value="{{ vieja_pregunta['imagen'] }}">
+        </div>
+        <div>
+            <a href="{{ url_for('listar_preguntas') }}">
+                <button type="button">Cancelar</button>
+            </a>
+            <button type="submit">Actualizar</button>
+        </div>
+    </fieldset>
+</form>
 
 {% endblock %}

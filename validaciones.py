@@ -33,7 +33,18 @@ def validar_crear_pregunta(pregunta):
     verdad = True
     lista = preguntas.find({'estatus': 'A'})
     for esto in lista: 
-        if pregunta['nombre'] == esto['nombre']: 
+        if (pregunta['nombre'] == esto['nombre'] or 
+            pregunta['id'] == esto['id']): 
+            verdad = False
+            break
+    return verdad
+
+def validar_editar_pregunta(pregunta):
+    verdad = True
+    lista = preguntas.find({'estatus': 'A'})
+    for esto in lista:
+        if (pregunta['nombre'] == esto['nombre'] and 
+            pregunta['id'] != esto['id']): 
             verdad = False
             break
     return verdad
