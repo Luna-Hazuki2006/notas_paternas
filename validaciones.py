@@ -48,3 +48,12 @@ def validar_editar_pregunta(pregunta):
             verdad = False
             break
     return verdad
+
+def validar_eliminar_pregunta(pregunta):
+    verdad = True
+    lista = examenes.find({'estatus': 'A'})
+    for esto in lista:
+        if (pregunta['id'] == esto['pregunta']):
+            verdad = False
+            break
+    return verdad

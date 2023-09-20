@@ -99,26 +99,20 @@ def modificar_pregunta(id):
 
 @app.route('/pregunta/<id>/eliminar', methods=['GET', 'POST'])
 def eliminar_pregunta(id):
-    viejo_examen = examenes.find_one({'id': id, 'estatus': 'A'})
+    vieja = categorias.find_one({'id': id, 'estatus': 'A'})
 
-    if not viejo_examen:
-        flash('Examen no encontrado')
-        return redirect(url_for('listar_examenes'))
-    
-    examen_eliminado = {
-        'id': viejo_examen['id'], 
-        'nombre': viejo_examen['nombre'], 
-        'categoria': viejo_examen['categoria'], 
-        'tipo': viejo_examen['tipo'], 
-        'precio': viejo_examen['precio'], 
-        'indicaciones': viejo_examen['indicaciones'], 
-        'estatus': 'I'
-    }
+    if not vieja:
+        flash('Pregunta no encontrada')
+        return redirect(url_for('listar_categorias'))
     
     if request.method == 'POST':
-        examenes.update_one({'id': id, 'estatus': 'A'}, examen_eliminado)
-        flash('Examen eliminado con éxito')
-        return redirect(url_for('listar_examenes'))
+        if validar_eliminar_pregunta(vieja):
+            busqueda = {'id': id, 'estatus': 'A'}
+            final = {'$set': {'estatus': 'I'}}
+            categorias.update_one(busqueda, final)
+            flash('Categoría eliminada con éxito')
+            return redirect(url_for('listar_categorias'))
+        else: flash('No se puede eliminar categorías que están en uso')
     return render_template('/preguntas/eliminar/index.html')
 
 @app.route('/categorias', methods=['GET'])
