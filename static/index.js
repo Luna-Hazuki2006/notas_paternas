@@ -34,3 +34,7 @@ function deimaginar() {
     externa.src = ''
     vistas.value = ''
 }
+
+function agregarSeccion() {
+    let 
+}

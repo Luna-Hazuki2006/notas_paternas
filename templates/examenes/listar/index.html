@@ -2,12 +2,13 @@
 {% block content %}
 
 <h2 class="centro">{% block title %}Exámenes{% endblock %}</h2>
-<a href="{{ url_for('crear_categoria') }}">¿No encuentras un examen? ¡Créalo!</a>
+<a href="{{ url_for('crear_examen') }}">¿No encuentras un examen? ¡Créalo!</a>
 <table>
     <tr>
         <th>Id</th>
         <th>Nombre</th>
         <th>Puntaje</th>
+        <th>Hojas</th>
         <th>Fecha de creacion</th>
         <th>Opciones</th>
     </tr>
@@ -17,6 +18,7 @@
         <td>{{ examen['nombre'] }}</td>
         <td>{{ examen['puntaje'] }}</td>
         <th>{{ examen['fecha_creacion'] }}</th>
+        <th>{{ examen['cantidad_hojas'] }}</th>
         <td>
             <a href="{{ url_for('consultar_examen', id=examen['id']) }}">
                 <img class="pequeño" src="{{ url_for('static', filename='consultar.png') }}" alt="Consultar">

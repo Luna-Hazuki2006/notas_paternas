@@ -1,6 +1,53 @@
 {% extends '././index.html' %}
 {% block content %}
 
-<h1>Cosas importantes</h1>
+<h2>{% block title %}Crear Exámenes{% endblock %}</h2>
+<form method="post">
+    <fieldset>
+        <legend>Datos</legend>
+        <label for="nombre">Nombre: </label>
+        <input 
+            type="text" 
+            name="nombre" 
+            id="nombre" 
+            value="{{ request.form['nombre'] }}" 
+            required
+        ><br>
+        <label for="descripcion">Descripción: </label>
+        <textarea 
+            name="descripcion" 
+            id="descripcion" 
+            cols="30" 
+            rows="10"
+            placeholder="Opcional, pero recomendado"
+            >{{ request.form['descripcion'] }}</textarea><br>
+        <label for="hojas">Cantidad de hojas: </label>
+        <input 
+            type="number" 
+            name="hojas" 
+            id="hojas"
+            min="1"
+            step="1"
+            placeholder="1"
+            required><br>
+        <fieldset>
+            <legend>Categorías y preguntas</legend>
+            <button onclick="agregarSeccion();" type="button">+</button>
+        </fieldset>
+        <label for="puntaje_total">Puntaje total: </label>
+        <input 
+            type="number" 
+            name="puntaje_total" 
+            id="puntaje_total"
+            value="0"
+            readonly>
+        <div>
+            <a href="{{ url_for('listar_examenes') }}">
+                <button type="button">Cancelar</button>
+            </a>
+            <button type="submit">Crear</button>
+        </div>        
+    </fieldset>
+</form>
 
 {% endblock %}

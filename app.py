@@ -210,10 +210,11 @@ def listar_examenes():
             'id': esto['id'], 
             'nombre': esto['nombre'], 
             'puntuacion': esto['puntuacion'], 
+            'cantidad_hojas': esto['cantidad_hojas'], 
             'fecha_creacion': esto['fecha_creacion']
         }
         prueba.append(nueva)
-    return render_template('/examenes/index.html', 
+    return render_template('/examenes/listar/index.html', 
                            lista=lista, 
                            prueba=prueba)
 
@@ -225,9 +226,9 @@ def crear_examen():
 def consultar_examen(id):
     return render_template('/examenes/crear/index.html')
 
-@app.route('/examen/<id>', methods=['GET', 'POST'])
-def modificar_examen(id):
-    return render_template('/examenes/modificar/index.html')
+@app.route('/examen/<id>/<hoja>', methods=['GET', ])
+def modificar_examen(id, hoja):
+    return render_template('/examenes/consultar_hoja/index.html')
 
 @app.route('/examen/<id>', methods=['GET', 'POST'])
 def eliminar_examene(id):
