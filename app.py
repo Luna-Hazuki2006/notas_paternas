@@ -220,6 +220,9 @@ def listar_examenes():
 
 @app.route('/examen', methods=['GET', 'POST'])
 def crear_examen():
+    if request.method == 'POST': 
+        print('se cargó')
+        print('si se carga')
     return render_template('/examenes/crear/index.html')
 
 @app.route('/examen/<id>', methods=['GET'])

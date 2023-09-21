@@ -36,5 +36,14 @@ function deimaginar() {
 }
 
 function agregarSeccion() {
-    let 
+}
+
+function verificarExamen() {
+    let total = document.getElementById('puntaje_total')
+    let boton = document.getElementById('guardar')
+    if (total.value != 0) {
+        boton.setAttribute('type', 'submit')
+    } else {
+        boton.setAttribute('type', 'button')
+    }
 }

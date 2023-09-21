@@ -34,8 +34,14 @@
             <legend>Categorías y puntajes</legend>
             <label for="categorias">Categoría: </label>
             <select name="categorias" id="categorias">
-                
+
             </select>
+            <label for="puntaje">Puntaje: </label>
+            <input 
+                type="number" 
+                name="puntaje" 
+                id="puntaje"
+                >
             <button onclick="agregarSeccion();" type="button">+</button>
         </fieldset>
         <label for="puntaje_total">Puntaje total: </label>
@@ -43,13 +49,13 @@
             type="number" 
             name="puntaje_total" 
             id="puntaje_total"
-            value="0"
+            value="1"
             readonly>
         <div>
             <a href="{{ url_for('listar_examenes') }}">
                 <button type="button">Cancelar</button>
             </a>
-            <button type="submit">Crear</button>
+            <button id="guardar" onclick="verificarExamen();" type="button">Crear</button>
         </div>        
     </fieldset>
 </form>
