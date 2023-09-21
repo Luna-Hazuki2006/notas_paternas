@@ -6,7 +6,8 @@ from validaciones import (validar_crear_categoria,
                           validar_editar_categoria, 
                           validar_eliminar_categoria, 
                           validar_crear_pregunta, 
-                          validar_editar_pregunta)
+                          validar_editar_pregunta, 
+                          validar_eliminar_pregunta)
 
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'pBsMG9T=Vjz*yDb}64$twh'
@@ -103,17 +104,18 @@ def eliminar_pregunta(id):
 
     if not vieja:
         flash('Pregunta no encontrada')
-        return redirect(url_for('listar_categorias'))
+        return redirect(url_for('listar_preguntas'))
     
     if request.method == 'POST':
         if validar_eliminar_pregunta(vieja):
             busqueda = {'id': id, 'estatus': 'A'}
             final = {'$set': {'estatus': 'I'}}
             categorias.update_one(busqueda, final)
-            flash('Categoría eliminada con éxito')
-            return redirect(url_for('listar_categorias'))
-        else: flash('No se puede eliminar categorías que están en uso')
-    return render_template('/preguntas/eliminar/index.html')
+            flash('Pregunta eliminada con éxito')
+            return redirect(url_for('listar_preguntas'))
+        else: flash('No se puede eliminar preguntas que están en uso')
+    return render_template('/preguntas/eliminar/index.html', 
+                           vieja_pregunta=vieja)
 
 @app.route('/categorias', methods=['GET'])
 def listar_categorias():
@@ -201,7 +203,19 @@ def eliminar_categoria(id):
 
 @app.route('/examenes')
 def listar_examenes(): 
-    return render_template('/examenes/index.html')
+    lista = examenes.find({'estatus': 'A'})
+    prueba = []
+    for esto in examenes.find({'estatus': 'A'}):
+        nueva = {
+            'id': esto['id'], 
+            'nombre': esto['nombre'], 
+            'puntuacion': esto['puntuacion'], 
+            'fecha_creacion': esto['fecha_creacion']
+        }
+        prueba.append(nueva)
+    return render_template('/examenes/index.html', 
+                           lista=lista, 
+                           prueba=prueba)
 
 @app.route('/examen', methods=['GET', 'POST'])
 def crear_examen():
