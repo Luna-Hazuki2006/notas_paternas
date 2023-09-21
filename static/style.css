@@ -35,10 +35,6 @@ table {
     margin-right: auto;
 }
 
-header a img {
-    width: 200px;
-}
-
 form {
     margin-left: auto;
     margin-right: auto;
@@ -73,4 +69,8 @@ fieldset {
 
 .rojo {
     color: red;
+}
+
+.imagen {
+    width: 200px;
 }
