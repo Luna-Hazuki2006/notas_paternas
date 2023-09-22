@@ -1,6 +1,12 @@
 {% extends '././index.html' %}
 {% block content %}
 
-<h1>Cosas importantes</h1>
+{% for examen in lista %}
+<hr>
+<h1 style="text-align: center;">{{ lista['nombre'] }}</h1>
+{% if lista['descripcion'] != '' %}
+<p style="text-align: center;">{{ lista['descripcion'] }}</p>
+{% endif %}
+{% endfor %}
 
 {% endblock %}

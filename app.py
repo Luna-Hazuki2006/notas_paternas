@@ -10,6 +10,7 @@ from validaciones import (validar_crear_categoria,
                           validar_eliminar_pregunta, 
                           validar_crear_examen)
 from datetime import datetime
+from pprint import pprint
 import random
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'pBsMG9T=Vjz*yDb}64$twh'
@@ -298,7 +299,8 @@ def crear_examen():
                     if numero >= esto['puntaje']: 
                         break
                 info['preguntas'] = mas
-            hoja['secciones'] = info
+
+            hoja['secciones'].append(info)
             muchos.append(hoja)
         examen['hojas'] = muchos
         print(examen)
@@ -315,7 +317,18 @@ def crear_examen():
 
 @app.route('/examen/<id>', methods=['GET'])
 def consultar_examen(id):
-    return render_template('/examenes/crear/index.html')
+    data = examenes.find_one({'id': id, 'estatus': 'A'})
+    pprint(data)
+    for esto in data['hojas']:
+        muchos = []
+        for esta in esto['secciones']['preguntas']: 
+            datos = {'id': esta, 'estatus': 'A'}
+            pregunta = preguntas.find_one(datos)
+            muchos.append(pregunta)
+        esto['secciones']['preguntas'] = muchos
+    pprint(data)
+    return render_template('/examenes/consultar/index.html', 
+                           lista=data)
 
 @app.route('/examen/<id>/<hoja>', methods=['GET'])
 def consultar_hoja(id, hoja):
