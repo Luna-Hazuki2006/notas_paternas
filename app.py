@@ -7,8 +7,10 @@ from validaciones import (validar_crear_categoria,
                           validar_eliminar_categoria, 
                           validar_crear_pregunta, 
                           validar_editar_pregunta, 
-                          validar_eliminar_pregunta)
-
+                          validar_eliminar_pregunta, 
+                          validar_crear_examen)
+from datetime import datetime
+import random
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'pBsMG9T=Vjz*yDb}64$twh'
 
@@ -45,7 +47,7 @@ def crear_pregunta():
         forma = request.form
         numero = preguntas.count_documents({}) + 1
         nueva_pregunta = {
-            'id': 'E' + str(numero), 
+            'id': 'P' + str(numero), 
             'nombre': str(forma['nombre']), 
             'categoria': forma['categoria'], 
             'puntaje': float(forma['puntaje']), 
@@ -209,7 +211,7 @@ def listar_examenes():
         nueva = {
             'id': esto['id'], 
             'nombre': esto['nombre'], 
-            'puntuacion': esto['puntuacion'], 
+            'puntaje_total': esto['puntaje_total'], 
             'cantidad_hojas': esto['cantidad_hojas'], 
             'fecha_creacion': esto['fecha_creacion']
         }
@@ -220,21 +222,107 @@ def listar_examenes():
 
 @app.route('/examen', methods=['GET', 'POST'])
 def crear_examen():
+    lista = []
+    for esto in categorias.find({'estatus': 'A'}):
+        for esta in preguntas.find({'estatus': 'A'}): 
+            if esta['categoria'] == esto['id']: 
+                categoria = {
+                    'id': esto['id'], 
+                    'nombre': esto['nombre'], 
+                    'descripcion': esto['descripcion'], 
+                    'puntaje': 0
+                }
+                lista.append(categoria)
+                break
+    for esto in lista:
+        numero = 0
+        datos = {'categoria': esto['id'], 'estatus': 'A'}
+        for esta in preguntas.find(datos): 
+            numero += esta['puntaje']
+        esto['puntaje'] = numero
     if request.method == 'POST': 
-        print('se cargó')
-        print('si se carga')
-    return render_template('/examenes/crear/index.html')
+        forma = request.form
+        numero = examenes.count_documents({}) + 1
+        examen = {
+            'id': 'E' + str(numero), 
+            'nombre': forma['nombre'], 
+            'descripcion': forma['descripcion'], 
+            'fecha_creacion': datetime.now(), 
+            'cantidad_hojas': int(forma['hojas']), 
+            'puntaje_total': float(forma['puntaje_total']), 
+            'categorias': [], 
+            'hojas': [], 
+            'estatus': 'A'
+        }
+        muchos = []
+        for esto in lista:
+            try: 
+                if forma[esto['id']] is not None:
+                    data = forma[esto['id']]
+                    puntaje = forma['puntaje' + esto['id']]
+                    categoria = {
+                        'categoria': data, 
+                        'puntaje': puntaje
+                    }
+                    muchos.append(categoria)
+                else: continue
+            except Exception:
+                continue
+        examen['categorias'] = muchos
+        muchos = []
+        for i in range(examen['cantidad_hojas']): 
+            hoja = {
+                'secciones': []
+            }
+            info = {}
+            for esto in lista: 
+                data = {'categoria': esto['id'], 'estatus': 'A'}
+                variedad = []
+                for cada in preguntas.find(data): 
+                    una = {
+                        'id': cada['id'], 
+                        'nombre': cada['nombre'], 
+                        'puntaje': cada['puntaje']
+                    }
+                    variedad.append(una)
+                random.shuffle(variedad)
+                info = {
+                    'categoria': esto['id'], 
+                    'preguntas': []
+                }
+                mas = []
+                numero = 0
+                for esta in variedad:
+                    numero += esta['puntaje']
+                    mas.append(esta['id'])
+                    if numero >= esto['puntaje']: 
+                        break
+                info['preguntas'] = mas
+            hoja['secciones'] = info
+            muchos.append(hoja)
+        examen['hojas'] = muchos
+        print(examen)
+        if validar_crear_examen(examen):
+            id = examenes.insert_one(examen).inserted_id
+            if id:
+                flash('Examen creado con éxito')
+                return redirect(url_for('listar_examenes'))
+            else: 
+                flash('Ocurrió un error guardando')
+        else: flash('El examen no pasó las validaciones')
+    return render_template('/examenes/crear/index.html', 
+                           lista=lista)
 
 @app.route('/examen/<id>', methods=['GET'])
 def consultar_examen(id):
     return render_template('/examenes/crear/index.html')
 
-@app.route('/examen/<id>/<hoja>', methods=['GET', ])
-def modificar_examen(id, hoja):
+@app.route('/examen/<id>/<hoja>', methods=['GET'])
+def consultar_hoja(id, hoja):
     return render_template('/examenes/consultar_hoja/index.html')
 
 @app.route('/examen/<id>', methods=['GET', 'POST'])
-def eliminar_examene(id):
+def eliminar_examen(id):
     return render_template('/examenes/modificar/index.html')
 
 if __name__ == '__main__':

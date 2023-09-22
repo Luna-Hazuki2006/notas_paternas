@@ -52,8 +52,19 @@ def validar_editar_pregunta(pregunta):
 def validar_eliminar_pregunta(pregunta):
     verdad = True
     lista = examenes.find({'estatus': 'A'})
-    for esto in lista:
-        if (pregunta['id'] == esto['pregunta']):
+    for esto in lista['hojas']:
+        for esta in esto['secciones']: 
+            for aquella in esta['preguntas']: 
+                if (pregunta['id'] == aquella):
+                    verdad = False
+                    break
+    return verdad
+
+def validar_crear_examen(examen):
+    verdad = True
+    lista = examenes.find({'estatus': 'A'})
+    for esto in lista: 
+        if esto['id'] == examen['id']: 
             verdad = False
             break
     return verdad

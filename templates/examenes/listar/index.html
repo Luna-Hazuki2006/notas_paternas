@@ -16,14 +16,14 @@
     <tr>
         <td>{{ examen['id'] }}</td>
         <td>{{ examen['nombre'] }}</td>
-        <td>{{ examen['puntaje'] }}</td>
-        <th>{{ examen['fecha_creacion'] }}</th>
-        <th>{{ examen['cantidad_hojas'] }}</th>
+        <td>{{ examen['puntaje_total'] }}</td>
+        <td>{{ examen['cantidad_hojas'] }}</td>
+        <td>{{ examen['fecha_creacion'] }}</td>
         <td>
             <a href="{{ url_for('consultar_examen', id=examen['id']) }}">
                 <img class="pequeño" src="{{ url_for('static', filename='consultar.png') }}" alt="Consultar">
             </a>
-            <a href="{{ url_for('eliminar_examen', id=categoria['id']) }}">
+            <a href="{{ url_for('eliminar_examen', id=examen['id']) }}">
                 <img class="pequeño" src="{{ url_for('static', filename='eliminar.png') }}" alt="Eliminar">
             </a>
         </td>

@@ -17,7 +17,7 @@
             <label for="categoria">Categoría: </label>
             <select name="categoria" id="categoria">
                 {% for categoria in divisiones %}
-                {% if vieja_pregunta['categoria'] == categoria %}
+                {% if vieja_pregunta['categoria'] == categoria['id'] %}
                 <option value="{{ categoria['id'] }}" selected>{{ categoria['nombre'] }}</option>
                 {% else %}
                 <option value="{{ categoria['id'] }}">{{ categoria['nombre'] }}</option>
