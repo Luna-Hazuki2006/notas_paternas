@@ -12,6 +12,7 @@ from validaciones import (validar_crear_categoria,
 from datetime import datetime
 from pprint import pprint
 import random
+import webbrowser
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'pBsMG9T=Vjz*yDb}64$twh'
 
@@ -326,13 +327,84 @@ def consultar_examen(id):
             pregunta = preguntas.find_one(datos)
             muchos.append(pregunta)
         esto['secciones']['preguntas'] = muchos
+        datos = {'id': esto['secciones']['categoria'], 'estatus': 'A'}
+        categoria = categorias.find_one(datos)
+        esto['secciones']['categoria'] = categoria
     pprint(data)
     return render_template('/examenes/consultar/index.html', 
-                           lista=data)
+                           examen=data)
 
-@app.route('/examen/<id>/<hoja>', methods=['GET'])
-def consultar_hoja(id, hoja):
-    return render_template('/examenes/consultar_hoja/index.html')
+@app.route('/examen/<id>/descargar', methods=['GET'])
+def descargar_hojas(id):
+    url = 'C:\\Users\\d\\Downloads\\examenes.html'
+    data = examenes.find_one({'id': id, 'estatus': 'A'})
+    pprint(data)
+    for esto in data['hojas']:
+        muchos = []
+        for esta in esto['secciones']['preguntas']: 
+            datos = {'id': esta, 'estatus': 'A'}
+            pregunta = preguntas.find_one(datos)
+            muchos.append(pregunta)
+        esto['secciones']['preguntas'] = muchos
+        datos = {'id': esto['secciones']['categoria'], 'estatus': 'A'}
+        categoria = categorias.find_one(datos)
+        esto['secciones']['categoria'] = categoria
+    pprint(data)
+    texto = '''
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examenes</title>
+</head>
+<body>
+<hr>
+    '''
+    for hoja in data['hojas']: 
+        texto += f'''
+<h1 style="text-align: center;">{ data['nombre'] }</h1>
+'''
+        if data['descripcion'] != '': 
+            texto += f'''
+<br>
+<p style="text-align: center;">{ data['descripcion'] }</p>
+<br>
+'''
+        texto += f'''
+<h3>Sección de { hoja['secciones']['categoria']['nombre'] }:</h3>
+'''
+        for pregunta in hoja['secciones']['preguntas']: 
+            texto += f'''
+<p>
+    <strong>Pregunta { hoja['secciones']['preguntas'].index(pregunta) + 1 }: </strong><br>
+    { pregunta['nombre'] } 
+    <strong>{ pregunta['puntaje'] } puntos</strong>
+    <br>
+'''
+            if pregunta['imagen'] != '': 
+                texto += f'''
+<img src="{ pregunta['imagen'] }" alt="Imagen para responder"><br>
+'''
+            texto += '''
+<strong>Responder: </strong><br>
+____________________________________________________________________ <br>
+____________________________________________________________________ <br>
+____________________________________________________________________ <br>
+</p>
+'''
+        texto += '''
+<hr>
+'''
+    texto += '''
+</body>
+</html>
+    '''
+    with open(url, 'wt') as todo:
+        todo.write(texto)
+    webbrowser.open(url)
+    return render_template('/examenes/consultar/index.html', 
+                           examen=data)
 
 @app.route('/examen/<id>', methods=['GET', 'POST'])
 def eliminar_examen(id):

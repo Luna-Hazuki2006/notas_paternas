@@ -1,12 +1,35 @@
 {% extends '././index.html' %}
 {% block content %}
-
-{% for examen in lista %}
+<p style="text-align: center;">
+    <a href="{{ url_for('descargar_hojas', id=examen['id']) }}">
+        <button>Descargar exámenes (en la carpeta de descargas)</button>
+    </a>
+</p>
 <hr>
-<h1 style="text-align: center;">{{ lista['nombre'] }}</h1>
-{% if lista['descripcion'] != '' %}
-<p style="text-align: center;">{{ lista['descripcion'] }}</p>
+{% for hoja in examen['hojas'] %}
+<h1 style="text-align: center;">{{ examen['nombre'] }}</h1>
+{% if examen['descripcion'] != '' %}
+<br>
+<p style="text-align: center;">{{ examen['descripcion'] }}</p>
+<br>
 {% endif %}
+<h3>Sección de {{ hoja['secciones']['categoria']['nombre'] }}:</h3>
+{% for pregunta in hoja['secciones']['preguntas'] %}
+<p>
+    <strong>Pregunta {{ hoja['secciones']['preguntas'].index(pregunta) + 1 }}: </strong><br>
+    {{ pregunta['nombre'] }} 
+    <strong>{{ pregunta['puntaje'] }} puntos</strong>
+    <br>
+    {% if pregunta['imagen'] != '' %}
+    <img src="{{ pregunta['imagen'] }}" alt="Imagen para responder"><br>
+    <strong>Responder: </strong><br>
+    ____________________________________________________________________ <br>
+    ____________________________________________________________________ <br>
+    ____________________________________________________________________ <br>
+    {% endif %}
+</p>
+{% endfor %}
+<hr>
 {% endfor %}
 
 {% endblock %}
