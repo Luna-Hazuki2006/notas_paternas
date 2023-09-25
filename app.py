@@ -132,7 +132,7 @@ def listar_categorias():
             'descripcion': esto['descripcion']
         }
         prueba.append(nueva)
-    return render_template('/categorias/listar/index.html', 
+    return render_template('/categorias/Listar/index.html', 
                            lista=lista, 
                            prueba=prueba)
 
